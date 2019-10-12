@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+
+from collections import namedtuple
+
 import scrapy
 from scrapy import Selector
 
@@ -7,7 +10,8 @@ def _clean_item(string):
     return string.xpath('text()').get().rstrip().lstrip()
 
 def _get_link(a_tag):
-    return a_tag.xpath('./a/@href').get()
+    # prepend https: as it's missing from link
+    return 'https:' + a_tag.xpath('./a/@href').get()
 
 def _get_owner_name(column):
     return column.xpath('text()').get().rstrip().lstrip()
@@ -17,13 +21,9 @@ def _get_amount_due(amount):
 
 
 def explode_row(row):
-    item, map_number, owner_name, amount_due = row.xpath('./td')
-    return (
-            _clean_item(item), 
-            _get_link(map_number),
-            _get_owner_name(owner_name),
-            _get_amount_due(amount_due))
-
+    print('in explode')
+    item, map_number, _, _ = row.xpath('./td')
+    return ( _clean_item(item), _get_link(map_number))
 
 
 class TaxSaleSpider(scrapy.Spider):
@@ -38,16 +38,23 @@ class TaxSaleSpider(scrapy.Spider):
         xpath = '/html/body/form/div[2]/table/tr'
         table_rows = response.xpath(xpath)
         length = len(table_rows)
-        explode = lambda things: [thing.get() for thing in things]
-        for row in table_rows:
-            item, map_number, owner_name, amount_due = explode_row(row)
-            print(item)
-            print(map_number)
-            print(owner_name)
-            print(amount_due)
-            print()
-        print(length)
-        print(table_rows[0])
 
-    def parse_property_page(self, response):
-        pass
+        def pre_load(item_num):
+            def pass_item_num(response):
+                return self.parse_property_page(item_num, response)
+            return pass_item_num
+
+        print('in parse!!!')
+        for row in table_rows:
+            print('in loop!!!')
+            item_num, link = explode_row(row)
+
+            print('in loog!!!!')
+            yield response.follow(link, pre_load(item_num))
+
+    def parse_property_page(self, item_num, response):
+        print('in parse_property_page')
+        print(item_num, response)
+        print()
+        yield {}
+
