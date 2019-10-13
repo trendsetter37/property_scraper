@@ -10,7 +10,7 @@
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 BOT_NAME = 'property_scraper'
-DEPTH_LIMIT = 2
+DEPTH_LIMIT = 0
 
 SPIDER_MODULES = ['property_scraper.spiders']
 NEWSPIDER_MODULE = 'property_scraper.spiders'

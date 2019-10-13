@@ -21,7 +21,6 @@ def _get_amount_due(amount):
 
 
 def explode_row(row):
-    print('in explode')
     item, map_number, _, _ = row.xpath('./td')
     return ( _clean_item(item), _get_link(map_number))
 
@@ -35,7 +34,7 @@ class TaxSaleSpider(scrapy.Spider):
     def parse(self, response):
         # get table xpath
         # /html/body/form/div[2]/table/tr
-        xpath = '/html/body/form/div[2]/table/tr'
+        xpath = '//table/tr'
         table_rows = response.xpath(xpath)
         length = len(table_rows)
 
@@ -44,17 +43,17 @@ class TaxSaleSpider(scrapy.Spider):
                 return self.parse_property_page(item_num, response)
             return pass_item_num
 
-        print('in parse!!!')
         for row in table_rows:
-            print('in loop!!!')
             item_num, link = explode_row(row)
-
-            print('in loog!!!!')
             yield response.follow(link, pre_load(item_num))
 
     def parse_property_page(self, item_num, response):
         print('in parse_property_page')
-        print(item_num, response)
+        print('item_num: {}'.format(item_num))
+        print(response.url)
         print()
-        yield {}
+        yield {
+            'url': response.url,
+            'item_num': item_num
+        }
 
