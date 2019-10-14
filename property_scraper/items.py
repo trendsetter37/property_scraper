@@ -8,7 +8,14 @@
 import scrapy
 
 
-class PropertyScraperItem(scrapy.Item):
+class PropertyItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
-    pass
+    url = scrapy.Field()
+    item_number = scrapy.Field()
+    acreage = scrapy.Field()
+    amount_due = scrapy.Field()
+    assessment_class = scrapy.Field()
+    location = scrapy.Field()
+    market_value = scrapy.Field()
+    last_updated = scrapy.Field(serialize=str)

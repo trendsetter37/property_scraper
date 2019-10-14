@@ -5,6 +5,8 @@ from collections import namedtuple
 import scrapy
 from scrapy import Selector
 
+from ..items import PropertyItem
+
 
 def _clean_item(string):
     return string.xpath('text()').get().rstrip().lstrip()
@@ -86,4 +88,11 @@ class TaxSaleSpider(scrapy.Spider):
             'location': location,
             'market_value': market_value
         }
+        yield PropertItem(url=response.url,
+                          item_number=item_num,
+                          acreage=acreage,
+                          amount_due=amount_due,
+                          assessment_class=ass_class,
+                          location=location,
+                          market_value=maket_value)
 
