@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from .utils import get_credentials
+
 # Scrapy settings for property_scraper project
 #
 # For simplicity, this file contains only settings considered important or
@@ -9,6 +11,7 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
+_AWS_ACCESS_KEY, _AWS_SECRET_KEY = get_credentials()
 BOT_NAME = 'property_scraper'
 DEPTH_LIMIT = 0
 
@@ -28,13 +31,13 @@ ROBOTSTXT_OBEY = True
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 1
+DOWNLOAD_DELAY = 2
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
-#COOKIES_ENABLED = False
+COOKIES_ENABLED = False
 
 # Disable Telnet Console (enabled by default)
 #TELNETCONSOLE_ENABLED = False
@@ -65,9 +68,15 @@ DOWNLOAD_DELAY = 1
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'property_scraper.pipelines.PropertyScraperPipeline': 300,
-#}
+ITEM_PIPELINES = {
+    'property_scraper.pipelines.DynamoDbPipeline': 1,
+    'property_scraper.pipelines.CsvPipeline': 2
+}
+
+AWS_ACCESS_KEY_ID = _AWS_ACCESS_KEY
+AWS_SECRET_ACCESS_KEY = _AWS_SECRET_KEY
+DYNAMODB_PIPELINE_REGION_NAME = 'us-east-2'
+DYNAMODB_PIPELINE_TABLE_NAME = 'properties'
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html

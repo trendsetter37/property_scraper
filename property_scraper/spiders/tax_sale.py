@@ -6,10 +6,11 @@ import scrapy
 from scrapy import Selector
 
 from ..items import PropertyItem
+from ..utils import get_random_useragent
 
 
 def _clean_item(string):
-    return string.xpath('text()').get().rstrip().lstrip()
+    return int(string.xpath('text()').get().rstrip().lstrip())
 
 
 def _get_link(a_tag):
@@ -58,6 +59,7 @@ class TaxSaleSpider(scrapy.Spider):
     name = 'tax_sale'
     allowed_domains = ['greenvillecounty.org']
     start_urls = ['https://www.greenvillecounty.org/appsas400/taxsale/']
+    custome_settings = {'USER_AGENT': get_random_useragent()}
 
     def parse(self, response):
         xpath = '//table/tr'
@@ -79,20 +81,11 @@ class TaxSaleSpider(scrapy.Spider):
         market_value = _get_market_value(response)
         acreage = _get_acreage(response)
 
-        yield {
-            'url': response.url,
-            'item_num': item_num,
-            'acreage': acreage,
-            'amount_due': amount_due,
-            'assessment_class': ass_class,
-            'location': location,
-            'market_value': market_value
-        }
-        yield PropertItem(url=response.url,
-                          item_number=item_num,
-                          acreage=acreage,
-                          amount_due=amount_due,
-                          assessment_class=ass_class,
-                          location=location,
-                          market_value=maket_value)
+        yield PropertyItem(url=response.url,
+                           item_num=item_num,
+                           acreage=acreage,
+                           amount_due=amount_due,
+                           assessment_class=ass_class,
+                           location=location,
+                           market_value=market_value)
 

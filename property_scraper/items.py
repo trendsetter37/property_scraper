@@ -12,7 +12,7 @@ class PropertyItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
     url = scrapy.Field()
-    item_number = scrapy.Field()
+    item_num = scrapy.Field()
     acreage = scrapy.Field()
     amount_due = scrapy.Field()
     assessment_class = scrapy.Field()
