@@ -6,7 +6,7 @@ boto3==1.9.248
 botocore==1.12.248
 cffi==1.12.3
 constantly==15.1.0
-cryptography==2.7
+cryptography==3.2
 cssselect==1.1.0
 decorator==4.4.0
 docutils==0.15.2
