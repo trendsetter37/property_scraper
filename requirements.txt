@@ -41,7 +41,7 @@ scrapy-dynamodb==0.2
 service-identity==18.1.0
 six==1.12.0
 traitlets==4.3.3
-Twisted==19.7.0
+Twisted==22.4.0
 urllib3==1.25.6
 w3lib==1.21.0
 wcwidth==0.1.7
